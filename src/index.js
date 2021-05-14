@@ -23,7 +23,7 @@ class TodoApp {
         return new Promise((resolve)=>{
             return this.getTodosFromLocal().then((todos)=>{
                 this.state.todoList = todos;
-                this.render().then(status => {
+                return this.render().then(status => {
                     this.bindEvents();
                     resolve(true);
                 })
@@ -100,7 +100,7 @@ class TodoApp {
             storeId
         } = this.options;
         return Promise.resolve().then(function () {
-            return window.localStorage.getItem(storeId) ? JSON.parse(window.localStorage.getItem(storeId)) : [];
+            return (typeof localStorage !== "undefined" && localStorage.getItem(storeId)) ? JSON.parse(localStorage.getItem(storeId)) : [];
         });
     }
     updateLocalStorage () {
@@ -112,7 +112,9 @@ class TodoApp {
         } = this.state;
         const stateTodo = this.getTodosState();
         return Promise.resolve().then(function () {
-            window.localStorage.setItem(storeId, JSON.stringify(todoList));
+            if(typeof localStorage !== "undefined"){
+                localStorage.setItem(storeId, JSON.stringify(todoList));
+            }
             return stateTodo;
         });
     }
