@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <title>todo app </title>
+</head>
+<style>
+body {
+    padding: 50px;
+    font-family: "Roboto", sans-serif;
+     box-sizing: border-box;
+}
+.done {
+    text-decoration: line-through;
+}
+.todo-item {
+    display: flex;
+    padding: 24px 24px 0px 0px;
+        align-items: center;
+}
+.buttons {
+    margin-left: 24px;
+}
+.finish-btn {
+    margin-right: 24px;
+    padding: 6px;
+    border-radius: 2px;
+    color: #FFFFFF;
+}
+.finished {
+    background: #ff6e6e;
+    border: solid 1px #ff6e6e;
+}
+.undo {
+    background: #5ae6b5;
+    border: solid 1px #5ae6b5; 
+}
+.btn-delete {
+    border: solid 1px #bb0000;
+    border-radius: 50%;
+    height: 24px;
+    width: 24px;
+    overflow: hidden;
+    line-height: 2px;
+    color: #FFFFFF;
+    background-color: #bb0000;
+    font-size: 16px;
+}
+</style>
+<body>
+    <h1>📝 To Do App</h1>
+    <div id="inputTodo" class="input-wrapper">
+        <input type="text" placeholder="Please enter the task..." />
+        <button id="createBtn" type="button"><i class="icon">+</i></button>
+    </div>
+    <div class="todoApp">
+        <div id="todoWrapper">
+        </div>
+
+    </div>
+</body>
+
+</html>
