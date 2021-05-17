@@ -3,6 +3,7 @@ import {expect} from 'chai';
 import sinon from 'sinon';
 import TodoApp from "../src/index";
 import { JSDOM } from 'jsdom';
+import 'mock-local-storage'
 
 const jsdom = new  JSDOM(`<!DOCTYPE html>
 <html lang="en">
@@ -25,10 +26,14 @@ const jsdom = new  JSDOM(`<!DOCTYPE html>
     </div>
 </body>
 </html>`);
-const { window } = jsdom;
+let { window } = jsdom;
+Object.defineProperty(window, 'localStorage', {
+    value: global.localStorage
+  });
 
 global.window = window;
 global.document = window.document;
+
 const appInputWrapper = document.getElementById("inputTodo");
 const input = appInputWrapper.querySelector("input");
 const createBtn = document.getElementById("createBtn");
@@ -79,11 +84,19 @@ const firstTodo = "Todo 1";
     it('check for the undo class', function() {
         const firstTodo = global.todoApp.options.todoWrapper.querySelector(".finish-btn");
         const firstTodoItem = global.todoApp.options.todoWrapper.querySelector(".todo-item");
-        const isUndo = firstTodo.classList.contains("undo");
-        console.log(firstTodoItem.classList.contains("progress"),"firstTodoItem.classListfirstTodoItem.classList")
+        const isUndo = firstTodo.classList.contains("finished");
         const isFirstTodo = firstTodoItem.classList.contains("progress");
         expect(isUndo).equal(true);
         expect(isFirstTodo).equal(true);
+    });
+    it('get the todo from local', function(done) {
+        const localtodos = localStorage.getItem("todoListTasks");
+        global.todoApp.getTodosFromLocal().then(todos=>{
+            const l = todos.length;
+            expect(l).equal(1);
+            done();
+        })
+
     });
     
   

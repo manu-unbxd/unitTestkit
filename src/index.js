@@ -100,7 +100,7 @@ class TodoApp {
             storeId
         } = this.options;
         return Promise.resolve().then(function () {
-            return (typeof localStorage !== "undefined" && localStorage.getItem(storeId)) ? JSON.parse(localStorage.getItem(storeId)) : [];
+            return (typeof window.localStorage !== "undefined" && window.localStorage.getItem(storeId)) ? JSON.parse(window.localStorage.getItem(storeId)) : [];
         });
     }
     updateLocalStorage () {
@@ -112,8 +112,8 @@ class TodoApp {
         } = this.state;
         const stateTodo = this.getTodosState();
         return Promise.resolve().then(function () {
-            if(typeof localStorage !== "undefined"){
-                localStorage.setItem(storeId, JSON.stringify(todoList));
+            if(typeof window.localStorage !== "undefined"){
+                window.localStorage.setItem(storeId, JSON.stringify(todoList));
             }
             return stateTodo;
         });
