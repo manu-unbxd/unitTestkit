@@ -1,12 +1,10 @@
-const COMPLETED_TODO="done";
-const CONTINUED_TODO ="progress";
-const FINISH_TODO = "Finish";
-const UNDO_TODO = "Undo";
-const FINISH_TODO_CSS = "finished";
-const UNDO_TODO_CSS = "undo";
 
 const TOGGLE_TODO_ACTION = "TOGGLE_TODO";
 const TOGGLE_DELETE_ACTION = "DELETE_TODO";
+import htmlParser from "./modules/htmlParser";
+import generateATodo from "./modules/generateATodo";
+import render from "./modules/render";
+import addTodo from "./modules/addTodo";
 
 class TodoApp {
     constructor(props) {
@@ -16,8 +14,14 @@ class TodoApp {
             createButton:props.createButton,
             storeId:props.storeId
         };
-        this.state = {};
+        this.state = {
+            todoList:[]
+        };
         this.initialize.bind(this);
+        this.render = render.bind(this);
+        this.htmlParser = htmlParser.bind(this);
+        this.generateATodo = generateATodo.bind(this);
+        this.addTodo = addTodo.bind(this);
     }
     initialize() {
         return new Promise((resolve)=>{
@@ -70,11 +74,7 @@ class TodoApp {
         });
 
     }
-    htmlParser(htmlTxt) {
-        var d = document.createElement('div');
-        d.innerHTML = htmlTxt;
-        return d.firstChild;
-    }
+    
     completeTodo(id) {
         let checkedTodo = this.state.todoList.find(todo => todo.id === id);
         checkedTodo.isCompleted = !checkedTodo.isCompleted;
@@ -118,61 +118,6 @@ class TodoApp {
             return stateTodo;
         });
     }
-
-    addTodo() {
-        const {
-            input
-        } = this.options;
-        return new Promise((resolve, reject)=>{
-            const ipValue =input.value;
-            if (ipValue.length > 2){
-                const item = {
-                    id: `todo-${Date.now()}`,
-                    title: ipValue,
-                    isCompleted: false
-                  };
-                this.state.todoList.push(item);
-                this.updateLocalStorage();
-                input.value = '';
-                this.render().then(status => resolve(true));
-              } else {
-                reject(false);
-              }
-        })
-    }
-    generateATodo(todo) {
-        const {
-            id,
-            isCompleted,
-            title
-        } = todo;
-        const todoCss = (isCompleted) ? COMPLETED_TODO : CONTINUED_TODO;
-        let ui = ``;
-        ui += `<div id="${id}" class="todo-item ${todoCss}">${title}<div class="buttons">`;
-        let finishTxt = FINISH_TODO;
-        let finishBtnCss = FINISH_TODO_CSS;
-        if(isCompleted) {
-            finishTxt = UNDO_TODO;
-            finishBtnCss = UNDO_TODO_CSS;
-        }
-        ui += `<button data-id="${id}" data-action="${TOGGLE_TODO_ACTION}" class="finish-btn ${finishBtnCss}">${finishTxt}</button>`;
-        ui += `<button data-id="${id}" data-action="${TOGGLE_DELETE_ACTION}" class="btn-delete" >x</button></div></div>`;
-        return ui;
-    }
-    render() {
-        return new Promise((resolve) =>{
-            const {
-                todoList
-            } = this.state;
-            todoList.sort((a, b) => a.status > b.status ? -1 : 1 );
-            let todosListUI = `<div class="todos">`;
-            todosListUI += todoList.map((todo) => {
-                return this.generateATodo(todo);
-            }).join("");
-            todosListUI += `</div>`;
-            this.options.todoWrapper.innerHTML = todosListUI;
-            resolve(true);
-        })
-    }
 }
+
 export default TodoApp;
